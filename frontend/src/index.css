@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  :root {
+    /* Futuristic dark SaaS palette (default to dark) */
+    --background: 232 45% 6%;
+    --foreground: 220 18% 96%;
+
+    --card: 232 35% 10%;
+    --card-foreground: 220 18% 96%;
+
+    --popover: 232 35% 10%;
+    --popover-foreground: 220 18% 96%;
+
+    /* Neon cyan */
+    --primary: 190 95% 60%;
+    --primary-foreground: 232 45% 6%;
+
+    --secondary: 232 28% 14%;
+    --secondary-foreground: 220 18% 96%;
+
+    --muted: 232 26% 16%;
+    --muted-foreground: 220 10% 70%;
+
+    /* Electric purple */
+    --accent: 268 85% 70%;
+    --accent-foreground: 232 45% 6%;
+
+    --destructive: 0 78% 60%;
+    --destructive-foreground: 232 45% 6%;
+
+    /* Used for “connected” indicator – keep consistent with neon cyan */
+    --success: 190 95% 60%;
+    --success-foreground: 232 45% 6%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 232 45% 6%;
+
+    --border: 232 26% 22%;
+    --input: 232 26% 22%;
+    --ring: 190 95% 60%;
+
+    --radius: 0.75rem;
+
+    --webcam-border: 190 95% 60%;
+    --prediction-bg: 190 95% 60%;
+    --confidence-bar: 190 95% 60%;
+    --no-hand: 220 10% 70%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(190 95% 60% / 0.95), hsl(268 85% 70% / 0.95));
+    --gradient-accent: linear-gradient(135deg, hsl(232 45% 8% / 0.85), hsl(268 85% 70% / 0.25));
+    --gradient-dark: linear-gradient(180deg, hsl(232 45% 6%), hsl(240 48% 4%));
+
+    --gradient-page: radial-gradient(1200px 800px at 25% 30%, hsl(234 70% 35% / 0.35), transparent 60%),
+      radial-gradient(900px 700px at 78% 35%, hsl(268 85% 70% / 0.22), transparent 55%),
+      radial-gradient(900px 700px at 55% 85%, hsl(190 95% 60% / 0.18), transparent 55%),
+      linear-gradient(120deg, hsl(232 45% 6%), hsl(240 46% 7%), hsl(255 45% 8%));
+
+    --shadow-glow: 0 0 48px hsl(var(--primary) / 0.22);
+    --shadow-card: 0 14px 42px hsl(0 0% 0% / 0.45);
+    --shadow-neon: 0 0 28px hsl(var(--primary) / 0.25);
+
+    /* Cursor glow variables (set by CursorGlow component) */
+    --cursor-x: 50vw;
+    --cursor-y: 50vh;
+    --cursor-active: 0;
+  }
+
+  /* Keep .dark for compatibility; same palette */
+  .dark { }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--gradient-page);
+    background-attachment: fixed;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer base {
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Subtle animated gradient movement + grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: var(--gradient-page);
+    background-size: 200% 200%;
+    animation: gradient-shift 14s ease-in-out infinite;
+    opacity: 0.9;
+    z-index: -2;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 20% 10%, hsl(var(--foreground) / 0.05) 0 1px, transparent 1px),
+      radial-gradient(circle at 80% 60%, hsl(var(--foreground) / 0.035) 0 1px, transparent 1px);
+    background-size: 6px 6px;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    z-index: -1;
+  }
+
+  /* Interactive holographic cursor lighting overlay */
+  .cursor-glow {
+    opacity: calc(0.85 * var(--cursor-active));
+    transition: opacity 300ms ease;
+    will-change: background;
+    background:
+      radial-gradient(
+        520px circle at var(--cursor-x) var(--cursor-y),
+        hsl(var(--primary) / 0.12),
+        transparent 60%
+      ),
+      radial-gradient(
+        760px circle at var(--cursor-x) var(--cursor-y),
+        hsl(var(--accent) / 0.08),
+        transparent 70%
+      ),
+      radial-gradient(
+        1100px circle at var(--cursor-x) var(--cursor-y),
+        hsl(234 70% 55% / 0.06),
+        transparent 72%
+      );
+    mix-blend-mode: screen;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-glow {
+      display: none;
+    }
+  }
+}
+
+@layer components {
+  .glass-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: hsl(var(--card) / 0.35);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid hsl(var(--primary) / 0.15);
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+  }
+
+  .step-connector {
+    background: linear-gradient(to right, hsl(var(--primary) / 0.3), transparent);
+  }
+
+  .webcam-container {
+    @apply relative rounded-2xl overflow-hidden;
+    border: 1px solid hsl(var(--webcam-border) / 0.45);
+    box-shadow:
+      0 0 0 1px hsl(var(--webcam-border) / 0.25),
+      0 0 56px hsl(var(--webcam-border) / 0.22),
+      inset 0 0 24px hsl(0 0% 0% / 0.55);
+  }
+
+  .prediction-display {
+    background: var(--gradient-primary);
+    @apply text-primary-foreground rounded-xl p-6 text-center;
+    box-shadow: var(--shadow-neon);
+    border: 1px solid hsl(var(--primary) / 0.28);
+  }
+
+  .confidence-bar {
+    @apply h-3 rounded-full overflow-hidden;
+    background: hsl(var(--muted) / 0.65);
+    border: 1px solid hsl(var(--border) / 0.65);
+  }
+
+  .confidence-fill {
+    @apply h-full rounded-full transition-all duration-300;
+    background: var(--gradient-primary);
+    box-shadow: 0 0 18px hsl(var(--primary) / 0.25);
+  }
+
+  .status-indicator {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  .status-indicator.connected {
+    @apply bg-success;
+    box-shadow: 0 0 16px hsl(var(--success) / 0.55);
+  }
+
+  .status-indicator.disconnected {
+    @apply bg-destructive;
+    box-shadow: 0 0 12px hsl(var(--destructive) / 0.6);
+  }
+
+  .gesture-letter {
+    @apply text-8xl font-bold;
+    text-shadow: 0 4px 20px hsl(0 0% 0% / 0.3);
+  }
+
+  .glass-card {
+    @apply rounded-2xl p-6;
+    background: linear-gradient(
+      180deg,
+      hsl(var(--card) / 0.55),
+      hsl(var(--card) / 0.35)
+    );
+    backdrop-filter: blur(16px);
+    box-shadow: var(--shadow-card);
+    border: 1px solid hsl(var(--primary) / 0.18);
+    transition: border-color 250ms ease, box-shadow 250ms ease, background-color 250ms ease, transform 250ms ease;
+  }
+
+  .glass-card:hover {
+    border-color: hsl(var(--primary) / 0.30);
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 1px hsl(var(--primary) / 0.18),
+      0 0 28px hsl(var(--primary) / 0.12);
+    backdrop-filter: blur(18px) saturate(1.08);
+  }
+}
