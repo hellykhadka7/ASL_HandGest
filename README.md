@@ -164,7 +164,7 @@ Pull requests are welcome. For major changes, please open an issue first.
 
 ## 👨‍💻 Author
 
-Your Name
+Gaurab Khadka
 GitHub: [https://github.com/github.com/hellykhadka7](https://github.com/hellykhadka7)
 
 ---
